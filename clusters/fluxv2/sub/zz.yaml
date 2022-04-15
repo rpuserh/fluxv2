@@ -1,12 +1,19 @@
-apiVersion: helm.fluxcd.io/v1
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: app
+  namespace: default
 spec:
   releaseName: app
   chart:
-    repository: https://charts.bitnami.com/bitnami
-    name: nginx
-    version: 10.1.0
-  values:
-    replicaCount: 2
+    spec:
+      chart: nginx
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: flux-system
+      version: "10.1.0"
+  interval: 5m0s
+  install:
+    remediation:
+      retries: 3
